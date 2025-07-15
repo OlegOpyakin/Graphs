@@ -4,7 +4,7 @@
 
 Запуск через CMake
 
-```c++
+```sh
 mkdir build
 
 cd build
@@ -18,7 +18,7 @@ make
 
 Reaching definitions:
 
-```
+```t
 auto Changed = true;
 while (Changed) {
     Changed = false;
@@ -37,7 +37,7 @@ while (Changed) {
 
 Available expressions:
 
-```
+```t
 auto Changed = true;
 while (Changed) {
     Changed = false;
@@ -56,7 +56,7 @@ while (Changed) {
 
 Live variables:
 
-```
+```t
 auto Changed = true;
 while (Changed) {
     Changed = false;
