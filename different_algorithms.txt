@@ -1,24 +1,5 @@
-# Graphs
-
-## Запуск проекта
-
-Запуск через CMake
-
-```c++
-mkdir build
-
-cd build
-
-cmake -DCMAKE_BUILD_TYPE=Debug ..
-
-make
-```
-
-## Основные алгоритмы на псевдокоде
-
 Reaching definitions:
 
-```
 auto Changed = true;
 while (Changed) {
     Changed = false;
@@ -33,11 +14,10 @@ while (Changed) {
             tie(ROUT[BB], Changed) = (RO, true);
     }
 }
-```
+
 
 Available expressions:
 
-```
 auto Changed = true;
 while (Changed) {
     Changed = false;
@@ -52,11 +32,10 @@ while (Changed) {
             tie(AVOUT[BB], Changed) = (NAVOUT, true);
     }
 }
-```
+
 
 Live variables:
 
-```
 auto Changed = true;
 while (Changed) {
     Changed = false;
@@ -71,4 +50,3 @@ while (Changed) {
             tie(LVOUT[BB], Changed) = (NLVOUT, true);
     }
 }
-```
