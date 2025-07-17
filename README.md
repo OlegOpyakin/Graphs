@@ -19,8 +19,8 @@ Graphs/
 │   ├── BitVector.h         # BitVector operations (OR, AND, subtract)
 │   └── ControlFlowGraph.h  # Main CFG class with analysis algorithms (so far only one)
 ├── src/
-│   └── main.cc            # Test cases and graph generation
-├── CMakeLists.txt         # Build configuration
+│   └── main.cc             # Test cases and graph generation
+├── CMakeLists.txt          # Build configuration
 └── README.md
 ```
 
