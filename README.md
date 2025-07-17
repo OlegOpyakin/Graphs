@@ -15,13 +15,13 @@ A C++ implementation of data flow analysis algorithms for control flow graphs, f
 ```t
 Graphs/
 ├── inc/
-│   ├── BasicBlock.h        # Basic block representation
+│   ├── BasicBlock.h        # BasicBlock representation
 │   ├── BitVector.h         # BitVector operations (OR, AND, subtract)
-│   └── ControlFlowGraph.h  # Main CFG class with analysis algorithms
+│   └── ControlFlowGraph.h  # Main CFG class with analysis algorithms (so far only one)
 ├── src/
 │   └── main.cc            # Test cases and graph generation
 ├── CMakeLists.txt         # Build configuration
-└── README.md             # This file
+└── README.md
 ```
 
 ## Building and Running
@@ -87,45 +87,10 @@ The `GenerateAndTest` function creates realistic control flow graphs:
 1. **Linear Backbone**: Ensures graph connectivity
 2. **Random Edges**: Adds loops and branches for complexity
 3. **Realistic Def/Kill**: Variables are killed when redefined
-4. **Convergence Analysis**: Tracks iterations and warns on poor convergence
 
-## Data Structures
+## Other algorithms
 
-### BitVector
-
-- Efficient boolean vector operations
-- Supports OR (`|`), AND (`&`), NOT (`~`), and subtract operations
-- Used for representing def/kill sets
-
-### BasicBlock
-
-- Represents a basic block in the control flow graph
-- Contains predecessor/successor lists
-- Stores definition and kill sets
-
-### ControlFlowGraph
-
-- Main container for the entire control flow graph
-- Manages bit vectors for data flow analysis
-- Implements the reaching definitions algorithm
-
-## Testing and Validation
-
-### Convergence Properties
-
-- Monitors iteration count for convergence analysis
-- Warns when convergence is slower than expected (> 2×graph_size)
-- Tests graphs of various sizes and complexities
-
-### Graph Validation
-
-- Ensures generated graphs are connected
-- Verifies realistic def/kill relationships
-- Tests edge cases and boundary conditions
-
-## Future Enhancements
-
-The framework is designed to be extensible for other data flow analyses:
+The AE and LV algorithms are given below, they can also be easily implemented with the existing infrastructure:
 
 ### Available Expressions
 
@@ -164,22 +129,3 @@ while (Changed) {
     }
 }
 ```
-
-## Performance Characteristics
-
-- **Time Complexity**: O(N × E × V) where N is iterations, E is edges, V is variables
-- **Space Complexity**: O(B × V) where B is basic blocks, V is variables
-- **Convergence**: Typically O(depth) iterations for acyclic graphs
-
-## Contributing
-
-Contributions are welcome! Areas for improvement:
-
-- Additional data flow analyses
-- Graph visualization
-- Performance optimizations
-- More sophisticated graph generation
-
-## License
-
-This project is for educational purposes, demonstrating data flow analysis concepts.
