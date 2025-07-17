@@ -38,41 +38,90 @@ void TestSmallGraph(){
     cfg.blocks_[1].AddKill(4);
 
     cfg.InitBitVectors();
-    std::cout << "\nIterations: " << cfg.ReachingDefinitions() << "\n";
-    cfg.ShowGraph();
+    std::cout << "Iterations: " << cfg.ReachingDefinitions() << "\n";
+    //cfg.ShowGraph();
 }
 
-void TestBigGraph(size_t num_of_vars, size_t graph_size, size_t edges_number) {
-    // Goal of this test is to check 
-    // the convergence of the algorithm
-
+void GenerateAndTest(size_t num_of_vars, size_t graph_size, size_t edges_number) {
     std::random_device r;
     std::default_random_engine e(r());
-    std::uniform_int_distribution<int> dist1(0,num_of_vars-1);
-    std::uniform_int_distribution<int> dist2(1,graph_size-1);
-    std::uniform_int_distribution<int> dist3(1,2);
+    std::uniform_int_distribution<int> var_dist(0, num_of_vars - 1);
+    std::uniform_int_distribution<int> block_dist(0, graph_size - 1);
+    std::uniform_real_distribution<double> prob_dist(0.0, 1.0);
 
-    ControlFlowGraph cfg(num_of_vars, graph_size); // cfg(num_of_vars, graph_size)
+    ControlFlowGraph cfg(num_of_vars, graph_size);
 
-    for(int i = 0; i < edges_number; ++i){
-        cfg.AddEdge(dist2(e), dist2(e)); // adding edges
+    for(size_t i = 0; i < graph_size - 1; ++i) {
+        cfg.AddEdge(i, i + 1);
     }
 
-    for(int i = 0; i < graph_size;  ++i){
-        for(int j = 0; j < num_of_vars; ++j){
-            if(dist3(e) == 2)  cfg.blocks_[i].AddDef(j);
-            if(dist3(e) == 2)  cfg.blocks_[i].AddKill(j);
+    size_t additional_edges = (edges_number > graph_size - 1) ? edges_number - (graph_size - 1) : 0;
+    for(size_t i = 0; i < additional_edges; ++i) {
+        size_t src = block_dist(e);
+        size_t dst = block_dist(e);
+        
+        if(src != dst || (src > 0 && prob_dist(e) < 0.3)) {
+            cfg.AddEdge(src, dst);
+        }
+    }
+
+    for(size_t i = 0; i < graph_size; ++i) {
+        std::vector<bool> defined_vars(num_of_vars, false);
+        std::vector<bool> killed_vars(num_of_vars, false);
+        
+        size_t num_defs = std::min(num_of_vars, static_cast<size_t>(1 + (prob_dist(e) * 3)));
+        for(size_t j = 0; j < num_defs; ++j) {
+            size_t var = var_dist(e);
+            if(!defined_vars[var]) {
+                cfg.blocks_[i].AddDef(var);
+                defined_vars[var] = true;
+            }
+        }
+
+        for(size_t var = 0; var < num_of_vars; ++var) {
+            if(defined_vars[var]) {
+                cfg.blocks_[i].AddKill(var);
+                killed_vars[var] = true;
+            } else if(prob_dist(e) < 0.2) {
+                cfg.blocks_[i].AddKill(var);
+                killed_vars[var] = true;
+            }
+        }
+        
+        if(i < graph_size - 1) {
+            bool has_def = false;
+            for(size_t var = 0; var < num_of_vars; ++var) {
+                if(defined_vars[var]) {
+                    has_def = true;
+                    break;
+                }
+            }
+            if(!has_def) {
+                size_t var = var_dist(e);
+                cfg.blocks_[i].AddDef(var);
+                cfg.blocks_[i].AddKill(var);
+            }
         }
     }
 
     cfg.InitBitVectors();
-    std::cout << "\nIterations: " << cfg.ReachingDefinitions() << "\n";
-    cfg.ShowGraph();
+    std::cout << "Iterations: " << cfg.ReachingDefinitions() << "\n\n";
+    //cfg.ShowGraph();
 }
 
 int main() try{
-    //TestBigGraph(30, 10, 20);
+    std::cout << "Testing Small Predefined Graph\n";
     TestSmallGraph();
+    
+    std::cout << "\nTest Generated Graphs\n";
+    std::cout << "Small Graph (5 vars, 4 blocks, 6 edges)\n";
+    GenerateAndTest(5, 4, 6);
+    
+    std::cout << "Medium Graph (10 vars, 8 blocks, 12 edges)\n";
+    GenerateAndTest(10, 8, 12);
+    
+    std::cout << "Large Graph (15 vars, 12 blocks, 20 edges)\n";
+    GenerateAndTest(20, 12, 30);
 }
 catch (const std::exception& e){
     std::cerr << "Error: " << e.what() << "\n";
