@@ -1,5 +1,12 @@
 # Control Flow Graph Analysis
 
+## Related projects
+
+- [Control flow graph analysys](https://github.com/OlegOpyakin/Dominators.git)
+- [Variable dependancy graph analysys](https://github.com/OlegOpyakin/Cycles.git)
+
+## Overview
+
 A C++ implementation of data flow analysis algorithms for control flow graphs, focused on reaching definitions analysis. This project demonstrates the convergence properties of iterative data flow algorithms on randomly generated and predefined control flow graphs.
 
 ## Features
